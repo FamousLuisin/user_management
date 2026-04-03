@@ -1,8 +1,6 @@
 package com.sea.api.model;
 
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,32 +8,25 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@Entity @Table(name = "tb_phones")
-public class Phone {
+@Entity @Table(name = "tb_emails")
+public class Email {
     
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String number;
-
-    @Enumerated(EnumType.STRING)
-    private PhoneType type;
+    private String email;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;
 
-    public Phone() {
+    public Email() {
     }
 
-    public Phone(Long id, String number, PhoneType type) {
+    public Email(Long id, String email, Client client) {
         this.id = id;
-        this.number = number;
-        this.type = type;
-    }
-
-    public enum PhoneType {
-        CELULAR, COMERCIAL, RESIDENCIAL
+        this.email = email;
+        this.client = client;
     }
 
     public Long getId() {
@@ -46,20 +37,12 @@ public class Phone {
         this.id = id;
     }
 
-    public String getNumber() {
-        return number;
+    public String getEmail() {
+        return email;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public PhoneType getType() {
-        return type;
-    }
-
-    public void setType(PhoneType type) {
-        this.type = type;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Client getClient() {
@@ -75,8 +58,7 @@ public class Phone {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((number == null) ? 0 : number.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
+        result = prime * result + ((email == null) ? 0 : email.hashCode());
         return result;
     }
 
@@ -88,18 +70,16 @@ public class Phone {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Phone other = (Phone) obj;
+        Email other = (Email) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
         } else if (!id.equals(other.id))
             return false;
-        if (number == null) {
-            if (other.number != null)
+        if (email == null) {
+            if (other.email != null)
                 return false;
-        } else if (!number.equals(other.number))
-            return false;
-        if (type != other.type)
+        } else if (!email.equals(other.email))
             return false;
         return true;
     }

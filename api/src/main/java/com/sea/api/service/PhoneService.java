@@ -1,5 +1,7 @@
 package com.sea.api.service;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -39,11 +41,12 @@ public class PhoneService {
         return mapper.parseObject(phone, PhoneResponseDTO.class);
     }
 
+    @Transactional
     public void deletePhone(Long id) {
         Phone phone = phoneRepository.findById(id).orElseThrow(() -> new NotFoundPhoneException(id));
 
         if (!phoneRepository.existsByClientIdAndIdNot(phone.getClient().getId(), id)){ 
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "não é possivel deleter o unico numero salvo");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "não é possivel deleter o unico telefone salvo");
         }
 
         phone.getClient().getPhones().remove(phone);
