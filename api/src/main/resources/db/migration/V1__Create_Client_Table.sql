@@ -1,0 +1,5 @@
+CREATE TABLE tb_clients (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    cpf VARCHAR(11) UNIQUE NOT NULL
+);

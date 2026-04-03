@@ -5,15 +5,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sea.api.dto.GreetingDto;
+import com.sea.api.dto.response.GreetingResponseDTO;
 
 @RestController
 @RequestMapping(path = "/api/greeting")
 public class GreetingController {
     
     @GetMapping
-    public ResponseEntity<GreetingDto> Greeting(){
-        GreetingDto greeting = new GreetingDto();
+    public ResponseEntity<GreetingResponseDTO> Greeting(){
+        GreetingResponseDTO greeting = new GreetingResponseDTO();
         greeting.setMessage("Bem vindo ao User Management");
         greeting.setVersion("1.0.0");
 

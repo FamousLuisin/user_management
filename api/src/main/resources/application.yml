@@ -1,0 +1,12 @@
+spring:
+    application:
+        name: api
+    datasource:
+        url: jdbc:postgresql://localhost:5432/database
+        username: admin
+        password: admin
+    jpa:
+        hibernate:
+            ddl-auto: none
+        open-in-view: false
+        show-sql: false
