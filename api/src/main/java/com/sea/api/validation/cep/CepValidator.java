@@ -3,13 +3,13 @@ package com.sea.api.validation.cep;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import com.sea.api.utils.CpfAndCepUtils;
+import com.sea.api.utils.NormalizeFields;
 
 public class CepValidator implements ConstraintValidator<Cep, String> {
 
     @Override
     public boolean isValid(String cep, ConstraintValidatorContext context) {
-        cep = CpfAndCepUtils.normalize(cep);
+        cep = NormalizeFields.normalize(cep);
 
         return validateCEP(cep);
     }

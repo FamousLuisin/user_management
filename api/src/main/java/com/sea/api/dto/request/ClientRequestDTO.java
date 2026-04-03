@@ -1,6 +1,10 @@
 package com.sea.api.dto.request;
 
+import java.util.List;
+
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.sea.api.validation.cep.Cep;
@@ -18,13 +22,18 @@ public class ClientRequestDTO {
     @Cep
     private String cep;
 
+    @Valid
+    @NotNull
+    private List<PhoneRequestDTO> phones;
+
     public ClientRequestDTO() {
     }
 
-    public ClientRequestDTO(String name, String cpf, String cep) {
+    public ClientRequestDTO(String name, String cpf, String cep, List<PhoneRequestDTO> phones) {
         this.name = name;
         this.cpf = cpf;
         this.cep = cep;
+        this.phones = phones;
     }
 
     public String getName() {
@@ -49,5 +58,13 @@ public class ClientRequestDTO {
 
     public void setCep(String cep) {
         this.cep = cep;
+    }
+
+    public List<PhoneRequestDTO> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(List<PhoneRequestDTO> phones) {
+        this.phones = phones;
     }
 }
