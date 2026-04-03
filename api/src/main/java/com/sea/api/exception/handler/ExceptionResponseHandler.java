@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.sea.api.exception.ExceptionResponse;
 import com.sea.api.exception.NotFoundAddressException;
 import com.sea.api.exception.NotFoundClientException;
+import com.sea.api.exception.NotFoundPhoneException;
 
 @ControllerAdvice
 @RestController
@@ -34,7 +36,7 @@ public class ExceptionResponseHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public final ResponseEntity<ExceptionResponse> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException ex, WebRequest request){
-        String message = ex.getBindingResult().getFieldErrors()
+        String message = ex.getBindingResult().getAllErrors()
             .stream()
             .map(e -> e.getDefaultMessage())
             .findFirst()
@@ -70,6 +72,32 @@ public class ExceptionResponseHandler {
             HttpStatus.NOT_FOUND.name(), 
             ex.getMessage(), 
             HttpStatus.NOT_FOUND.value(), 
+            request.getDescription(false),
+            LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @ExceptionHandler(NotFoundPhoneException.class)
+    public final ResponseEntity<ExceptionResponse> notFoundPhoneExceptionHandler(Exception ex, WebRequest request){   
+        ExceptionResponse response = new ExceptionResponse(
+            HttpStatus.NOT_FOUND.name(), 
+            ex.getMessage(), 
+            HttpStatus.NOT_FOUND.value(), 
+            request.getDescription(false),
+            LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public final ResponseEntity<ExceptionResponse> httpMessageNotReadableExceptionHandler(Exception ex, WebRequest request){   
+        ExceptionResponse response = new ExceptionResponse(
+            HttpStatus.BAD_REQUEST.name(), 
+            "Dados inválidos", 
+            HttpStatus.BAD_REQUEST.value(), 
             request.getDescription(false),
             LocalDateTime.now()
         );

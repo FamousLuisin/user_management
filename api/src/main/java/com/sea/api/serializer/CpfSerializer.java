@@ -10,16 +10,13 @@ public class CpfSerializer extends JsonSerializer<String> {
 
     @Override
     public void serialize(String cpf, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-        String cpfWithMask = "";
+        String cpfWithMask = String.format("%s.%s.%s-%s", 
+            cpf.substring(0, 3),
+            cpf.substring(3, 6),
+            cpf.substring(6, 9),
+            cpf.substring(9, 11)
+        );
         
-        for (int i = 0; i < cpf.length(); i++) {
-            if (i == 3 || i == 6) cpfWithMask = cpfWithMask.concat(".");
-            
-            if (i == 9) cpfWithMask = cpfWithMask.concat("-") ;
-            
-            cpfWithMask = cpfWithMask.concat(String.valueOf(cpf.charAt(i)));
-        }
-
         gen.writeString(cpfWithMask);
     }
     

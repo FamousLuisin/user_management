@@ -1,5 +1,7 @@
 package com.sea.api.dto.response;
 
+import java.util.List;
+
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.sea.api.serializer.CpfSerializer;
 
@@ -13,6 +15,8 @@ public class ClientResponseDTO {
     private String cpf;
 
     private AddressResponseDTO address;
+
+    private List<PhoneResponseDTO> phones;
 
     public AddressResponseDTO getAddress() {
         return address;
@@ -44,6 +48,14 @@ public class ClientResponseDTO {
 
     public Long getId() {
         return id;
+    }
+
+    public List<PhoneResponseDTO> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(List<PhoneResponseDTO> phones) {
+        this.phones = phones;
     }
 
 }

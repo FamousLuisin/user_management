@@ -3,13 +3,13 @@ package com.sea.api.validation.cpf;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import com.sea.api.utils.CpfAndCepUtils;
+import com.sea.api.utils.NormalizeFields;
 
 public class CpfValidator implements ConstraintValidator<Cpf, String>{
 
     @Override
     public boolean isValid(String cpf, ConstraintValidatorContext context) {
-        cpf = CpfAndCepUtils.normalize(cpf);
+        cpf = NormalizeFields.normalize(cpf);
 
         return validateCPF(cpf);
     }

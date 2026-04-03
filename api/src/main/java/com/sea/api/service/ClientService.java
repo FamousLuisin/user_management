@@ -14,8 +14,9 @@ import com.sea.api.exception.NotFoundClientException;
 import com.sea.api.mapper.Mapper;
 import com.sea.api.model.Address;
 import com.sea.api.model.Client;
+import com.sea.api.model.Phone;
 import com.sea.api.repository.ClientRepository;
-import com.sea.api.utils.CpfAndCepUtils;
+import com.sea.api.utils.NormalizeFields;
 
 @Service
 public class ClientService {
@@ -30,14 +31,19 @@ public class ClientService {
     private Mapper mapper;
 
     public ClientResponseDTO createClient(ClientRequestDTO request){
-        AddressRequestDTO addressDTO = viaCepClientService.viaCepClient(CpfAndCepUtils.normalize(request.getCep()));
+        AddressRequestDTO addressDTO = viaCepClientService.viaCepClient(NormalizeFields.normalize(request.getCep()));
         Address address = mapper.parseObject(addressDTO, Address.class);
-        address.setCep(CpfAndCepUtils.normalize(request.getCep()));
+        address.setCep(NormalizeFields.normalize(request.getCep()));
+
+        List<Phone> phones = mapper.parseListObject(request.getPhones(), Phone.class);
 
         Client client = mapper.parseObject(request, Client.class);
-        client.setCpf(CpfAndCepUtils.normalize(request.getCpf()));
+        client.setCpf(NormalizeFields.normalize(request.getCpf()));
         client.setAddress(address);
+        client.setPhones(phones);
         address.setClient(client);
+
+        phones.forEach(p -> p.setClient(client));
 
         clientRepository.save(client);
              
@@ -64,7 +70,7 @@ public class ClientService {
         Client client = clientRepository.findById(id).orElseThrow(() -> new NotFoundClientException(id));
 
         client.setName(request.getName());
-        client.setCpf(CpfAndCepUtils.normalize(request.getCpf()));
+        client.setCpf(NormalizeFields.normalize(request.getCpf()));
         clientRepository.save(client);
 
         return mapper.parseObject(client, ClientResponseDTO.class);
