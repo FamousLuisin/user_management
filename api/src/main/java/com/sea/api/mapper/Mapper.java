@@ -1,5 +1,6 @@
 package com.sea.api.mapper;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,7 +16,7 @@ public class Mapper {
         return mapper.map(origin, destination);
     }
 
-    public <O, D> List<D> parseListObject(List<O> origin, Class<D> destination){
+    public <O, D> List<D> parseListObject(Collection<O> origin, Class<D> destination){
         return origin.stream().map(obj -> mapper.map(obj, destination)).collect(Collectors.toList());
     }
 }

@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.NOT_FOUND)
-public class NotFoundPhoneException extends RuntimeException{
+public class NotFoundEmailException extends RuntimeException{
     
-    public NotFoundPhoneException(Long id){
-        super("phone with ID " + id + " not found");
+    public NotFoundEmailException(Long id){
+        super("email with ID " + id + " not found");
     }
 }

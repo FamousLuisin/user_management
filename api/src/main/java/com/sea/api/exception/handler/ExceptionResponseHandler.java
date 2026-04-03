@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.sea.api.exception.ExceptionResponse;
 import com.sea.api.exception.NotFoundAddressException;
 import com.sea.api.exception.NotFoundClientException;
+import com.sea.api.exception.NotFoundEmailException;
 import com.sea.api.exception.NotFoundPhoneException;
 
 @ControllerAdvice
@@ -81,6 +82,19 @@ public class ExceptionResponseHandler {
 
     @ExceptionHandler(NotFoundPhoneException.class)
     public final ResponseEntity<ExceptionResponse> notFoundPhoneExceptionHandler(Exception ex, WebRequest request){   
+        ExceptionResponse response = new ExceptionResponse(
+            HttpStatus.NOT_FOUND.name(), 
+            ex.getMessage(), 
+            HttpStatus.NOT_FOUND.value(), 
+            request.getDescription(false),
+            LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @ExceptionHandler(NotFoundEmailException.class)
+    public final ResponseEntity<ExceptionResponse> notFoundEmailExceptionHandler(Exception ex, WebRequest request){   
         ExceptionResponse response = new ExceptionResponse(
             HttpStatus.NOT_FOUND.name(), 
             ex.getMessage(), 

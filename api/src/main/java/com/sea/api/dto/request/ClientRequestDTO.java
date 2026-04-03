@@ -26,6 +26,10 @@ public class ClientRequestDTO {
     @NotNull
     private List<PhoneRequestDTO> phones;
 
+    @Valid
+    @NotNull
+    private List<EmailRequestDTO> emails;
+
     public ClientRequestDTO() {
     }
 
@@ -66,5 +70,13 @@ public class ClientRequestDTO {
 
     public void setPhones(List<PhoneRequestDTO> phones) {
         this.phones = phones;
+    }
+
+    public List<EmailRequestDTO> getEmails() {
+        return emails;
+    }
+
+    public void setEmails(List<EmailRequestDTO> emails) {
+        this.emails = emails;
     }
 }

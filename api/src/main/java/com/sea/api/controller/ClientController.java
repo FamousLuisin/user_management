@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sea.api.dto.request.ClientRequestDTO;
+import com.sea.api.dto.request.ClientUpdateDTO;
 import com.sea.api.dto.response.ClientResponseDTO;
 import com.sea.api.service.ClientService;
 
@@ -66,7 +67,7 @@ public class ClientController {
     @PutMapping(path = "/{id}")
     public ResponseEntity<ClientResponseDTO> updateClientById(
         @PathVariable(name = "id") Long id,
-        @RequestBody @Valid ClientRequestDTO request
+        @RequestBody @Valid ClientUpdateDTO request
     ){
         ClientResponseDTO response = clientService.updateClientById(id, request);
         return ResponseEntity.ok(response);

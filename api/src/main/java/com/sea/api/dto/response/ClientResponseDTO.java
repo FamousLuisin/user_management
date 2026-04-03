@@ -18,6 +18,8 @@ public class ClientResponseDTO {
 
     private List<PhoneResponseDTO> phones;
 
+    private List<EmailResponseDTO> emails;
+
     public AddressResponseDTO getAddress() {
         return address;
     }
@@ -56,6 +58,14 @@ public class ClientResponseDTO {
 
     public void setPhones(List<PhoneResponseDTO> phones) {
         this.phones = phones;
+    }
+
+    public List<EmailResponseDTO> getEmails() {
+        return emails;
+    }
+
+    public void setEmails(List<EmailResponseDTO> emails) {
+        this.emails = emails;
     }
 
 }

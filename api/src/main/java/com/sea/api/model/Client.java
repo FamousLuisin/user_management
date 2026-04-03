@@ -1,6 +1,6 @@
 package com.sea.api.model;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -26,7 +26,10 @@ public class Client {
     private Address address;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "client", fetch = FetchType.EAGER)
-    private List<Phone> phones;
+    private Set<Phone> phones;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "client", fetch = FetchType.EAGER)
+    private Set<Email> emails;
 
     public Long getId() {
         return id;
@@ -60,12 +63,20 @@ public class Client {
         this.address = address;
     }
 
-    public List<Phone> getPhones() {
+    public Set<Phone> getPhones() {
         return phones;
     }
 
-    public void setPhones(List<Phone> phones) {
+    public void setPhones(Set<Phone> phones) {
         this.phones = phones;
+    }
+
+    public Set<Email> getEmails() {
+        return emails;
+    }
+
+    public void setEmails(Set<Email> emails) {
+        this.emails = emails;
     }
 
     @Override
