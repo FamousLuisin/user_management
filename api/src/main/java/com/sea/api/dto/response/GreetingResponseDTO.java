@@ -1,6 +1,6 @@
-package com.sea.api.dto;
+package com.sea.api.dto.response;
 
-public class GreetingDto {
+public class GreetingResponseDTO {
     
     private String version;
 
