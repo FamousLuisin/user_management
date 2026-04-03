@@ -12,8 +12,10 @@ public class ClientResponseDTO {
     @JsonSerialize(using = CpfSerializer.class)
     private String cpf;
 
-    public Long getId() {
-        return id;
+    private AddressResponseDTO address;
+
+    public AddressResponseDTO getAddress() {
+        return address;
     }
 
     public void setId(Long id) {
@@ -35,4 +37,13 @@ public class ClientResponseDTO {
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
+
+    public void setAddress(AddressResponseDTO address) {
+        this.address = address;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
 }
