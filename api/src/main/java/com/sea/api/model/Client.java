@@ -1,9 +1,11 @@
 package com.sea.api.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity @Table(name = "tb_clients")
@@ -15,6 +17,9 @@ public class Client {
     private String name;
 
     private String cpf;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "client")
+    private Address address;
 
     public Long getId() {
         return id;
@@ -75,5 +80,13 @@ public class Client {
         } else if (!cpf.equals(other.cpf))
             return false;
         return true;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }

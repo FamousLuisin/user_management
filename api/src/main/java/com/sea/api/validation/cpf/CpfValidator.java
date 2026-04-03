@@ -3,23 +3,19 @@ package com.sea.api.validation.cpf;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import com.sea.api.utils.CpfUtils;
+import com.sea.api.utils.CpfAndCepUtils;
 
 public class CpfValidator implements ConstraintValidator<Cpf, String>{
 
     @Override
     public boolean isValid(String cpf, ConstraintValidatorContext context) {
-        if (cpf == null || cpf.isEmpty()) {
-            return false;
-        }
-
-        cpf = CpfUtils.normalize(cpf);
+        cpf = CpfAndCepUtils.normalize(cpf);
 
         return validateCPF(cpf);
     }
 
     private boolean validateCPF(String cpf) {
-        if (cpf == null || !cpf.matches("[0-9]{11}")) {
+        if (cpf == null || cpf.isEmpty() || !cpf.matches("[0-9]{11}")) {
             return false;
         }
 
