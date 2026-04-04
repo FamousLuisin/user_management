@@ -5,11 +5,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sea.api.controller.docs.GreetingControllerDocs;
 import com.sea.api.dto.response.GreetingResponseDTO;
 
 @RestController
 @RequestMapping(path = "/api/greeting")
-public class GreetingController {
+public class GreetingController implements GreetingControllerDocs {
     
     @GetMapping
     public ResponseEntity<GreetingResponseDTO> Greeting(){

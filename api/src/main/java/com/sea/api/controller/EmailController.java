@@ -12,13 +12,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sea.api.controller.docs.EmailControllerDocs;
 import com.sea.api.dto.request.EmailRequestDTO;
 import com.sea.api.dto.response.EmailResponseDTO;
 import com.sea.api.service.EmailService;
 
 @RestController
 @RequestMapping(path = "/api/email")
-public class EmailController {
+public class EmailController implements EmailControllerDocs {
     
     @Autowired
     private EmailService emailService;
