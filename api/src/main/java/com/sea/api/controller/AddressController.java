@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sea.api.controller.docs.AddressControllerDocs;
 import com.sea.api.dto.request.AddressRequestDTO;
 import com.sea.api.dto.request.CepRequestDTO;
 import com.sea.api.dto.response.AddressResponseDTO;
@@ -18,7 +19,7 @@ import com.sea.api.service.AddressService;
 
 @RestController
 @RequestMapping(path = "/api/address")
-public class AddresController {
+public class AddressController implements AddressControllerDocs {
 
     @Autowired
     private AddressService addressService;

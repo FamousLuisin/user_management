@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sea.api.controller.docs.ClientControllerDocs;
 import com.sea.api.dto.request.ClientRequestDTO;
 import com.sea.api.dto.request.ClientUpdateDTO;
 import com.sea.api.dto.response.ClientResponseDTO;
@@ -27,10 +28,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
 @RequestMapping(path = "/api/client")
-public class ClientController {
+public class ClientController implements ClientControllerDocs {
 
     @Autowired
     private ClientService clientService;

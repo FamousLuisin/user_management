@@ -3,6 +3,7 @@ package com.sea.api.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sea.api.controller.docs.PhoneControllerDocs;
 import com.sea.api.dto.request.PhoneRequestDTO;
 import com.sea.api.dto.response.PhoneResponseDTO;
 import com.sea.api.service.PhoneService;
@@ -18,10 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
-
 @RestController
 @RequestMapping(path = "/api/phone")
-public class PhoneController {
+public class PhoneController implements PhoneControllerDocs {
     
     @Autowired
     private PhoneService phoneService;

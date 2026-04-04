@@ -10,4 +10,6 @@ spring:
             ddl-auto: none
         open-in-view: false
         show-sql: true
-        
+logging:
+  level:
+    root: WARN
