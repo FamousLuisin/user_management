@@ -9,7 +9,9 @@ spring:
         hibernate:
             ddl-auto: none
         open-in-view: false
-        show-sql: true
+        show-sql: false
 logging:
   level:
     root: WARN
+jwt:
+    secret: mysecretkey
