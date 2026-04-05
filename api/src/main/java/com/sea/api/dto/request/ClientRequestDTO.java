@@ -33,11 +33,12 @@ public class ClientRequestDTO {
     public ClientRequestDTO() {
     }
 
-    public ClientRequestDTO(String name, String cpf, String cep, List<PhoneRequestDTO> phones) {
+    public ClientRequestDTO(String name, String cpf, String cep, List<PhoneRequestDTO> phones, List<EmailRequestDTO> emails) {
         this.name = name;
         this.cpf = cpf;
         this.cep = cep;
         this.phones = phones;
+        this.emails = emails;
     }
 
     public String getName() {

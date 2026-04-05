@@ -23,10 +23,9 @@ public class Email {
     public Email() {
     }
 
-    public Email(Long id, String email, Client client) {
+    public Email(Long id, String email) {
         this.id = id;
         this.email = email;
-        this.client = client;
     }
 
     public Long getId() {

@@ -31,6 +31,18 @@ public class Client {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "client", fetch = FetchType.EAGER)
     private Set<Email> emails;
 
+    public Client() {
+    }
+
+    public Client(Long id, String name, String cpf, Address address, Set<Phone> phones, Set<Email> emails) {
+        this.id = id;
+        this.name = name;
+        this.cpf = cpf;
+        this.address = address;
+        this.phones = phones;
+        this.emails = emails;
+    }
+
     public Long getId() {
         return id;
     }

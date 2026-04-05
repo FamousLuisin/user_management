@@ -20,6 +20,19 @@ public class ClientResponseDTO {
 
     private List<EmailResponseDTO> emails;
 
+    public ClientResponseDTO() {
+    }
+
+    public ClientResponseDTO(Long id, String name, String cpf, AddressResponseDTO address,
+            List<PhoneResponseDTO> phones, List<EmailResponseDTO> emails) {
+        this.id = id;
+        this.name = name;
+        this.cpf = cpf;
+        this.address = address;
+        this.phones = phones;
+        this.emails = emails;
+    }
+
     public AddressResponseDTO getAddress() {
         return address;
     }
