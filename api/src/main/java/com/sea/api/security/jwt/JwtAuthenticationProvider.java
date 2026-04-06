@@ -3,6 +3,7 @@ package com.sea.api.security.jwt;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class JwtAuthenticationProvider {
     @Value("${jwt.issuer:http://localhost:8080}")
     private String issuer;
 
+    @Value("${jwt.expiration:360000000000000}")
+    private long expiration;
+
     public String generateToken(CustomUserDetails user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
@@ -30,6 +34,10 @@ public class JwtAuthenticationProvider {
                     .withIssuedAt(creationDate())
                     .withExpiresAt(expirationDate())
                     .withSubject(user.getUsername())
+                    .withClaim("roles", user.getAuthorities()
+                        .stream()
+                        .map(auth -> auth.getAuthority())
+                        .collect(Collectors.toList()))
                     .sign(algorithm);
         } catch (JWTCreationException exception){
             throw new JWTCreationException("Erro ao gerar token.", exception);
@@ -54,6 +62,6 @@ public class JwtAuthenticationProvider {
     }
 
     private Instant expirationDate() {
-        return ZonedDateTime.now(ZoneId.of("America/Recife")).plusHours(4).toInstant();
+        return ZonedDateTime.now(ZoneId.of("America/Recife")).toInstant().plusMillis(expiration);
     }
 }

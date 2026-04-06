@@ -26,8 +26,16 @@ public class SecurityConfig {
 
     @Autowired
     private JwtAuthenticationFilter authenticationFilter;
-    
-    public static final String[] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {"/auth/login", "/swagger-ui/**", "/v3/api-docs/**"};
+
+    public static final String[] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
+        "/auth/login",
+        "/swagger-ui/**",
+        "/swagger-ui.html",
+        "/v3/api-docs/**",
+        "/v3/api-docs",
+        "/swagger-resources/**",
+        "/webjars/**"
+    };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -42,7 +50,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST,"/auth/register").hasAnyRole("ADMIN")
                 .antMatchers(HttpMethod.PUT,"/api/**").hasAnyRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE,"/api/**").hasAnyRole("ADMIN")
-                .anyRequest().denyAll()
+                .anyRequest().authenticated()
             ).addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class).build();
     }
 

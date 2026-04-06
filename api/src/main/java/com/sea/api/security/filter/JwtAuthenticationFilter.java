@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.sea.api.model.User;
@@ -31,6 +32,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 
     @Autowired
     private JwtAuthenticationProvider jwtProvider;
+
+    private static final AntPathMatcher matcher = new AntPathMatcher();
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -71,8 +74,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
     }
 
     private boolean checkIfEndpointIsNotPublic(HttpServletRequest request) {
-        String requestURI = request.getRequestURI();
-        return !Arrays.asList(SecurityConfig.ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).contains(requestURI);
+        String path = request.getRequestURI();
+        
+        return Arrays.stream(SecurityConfig.ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED)
+                .noneMatch(pattern -> matcher.match(pattern, path));
     }
     
     private void sendError(HttpServletResponse response, int status, String message) throws IOException {
