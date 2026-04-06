@@ -26,6 +26,7 @@ import com.sea.api.dto.request.LoginUserDTO;
 import com.sea.api.dto.request.PhoneRequestDTO;
 import com.sea.api.dto.response.ClientResponseDTO;
 import com.sea.api.dto.response.JwtResponseDTO;
+import com.sea.api.dto.response.PageResponseDTO;
 import com.sea.api.integration.AbstractIntegrationTest;
 
 import io.restassured.builder.RequestSpecBuilder;
@@ -125,12 +126,15 @@ public class ClientControllerTest extends AbstractIntegrationTest {
                 .body()
                     .asString();
 
-        List<ClientResponseDTO> clients = objectMapper.readValue(content, new TypeReference<List<ClientResponseDTO>>() {});
+        PageResponseDTO<ClientResponseDTO> pageResponse = objectMapper.readValue(content, new TypeReference<PageResponseDTO<ClientResponseDTO>>() {});
 
-        assertNotNull(clients);
-        assert(clients.size() > 0);
-        assertNotNull(clients.get(0).getId());
-        assertNotNull(clients.get(0).getAddress());
+        List<ClientResponseDTO> clients = pageResponse.getContent();
+
+        assertNotNull(pageResponse);
+        assertNotNull(pageResponse.getContent());
+        assert(pageResponse.getContent().size() > 0);
+        assertNotNull(pageResponse.getContent().get(0).getId());
+        assertNotNull(pageResponse.getContent().get(0).getAddress());
         assertNotNull(clients.get(0).getPhones());
         assertNotNull(clients.get(0).getEmails());
     }

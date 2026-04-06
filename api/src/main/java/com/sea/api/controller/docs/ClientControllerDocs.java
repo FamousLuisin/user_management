@@ -1,12 +1,11 @@
 package com.sea.api.controller.docs;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 
 import com.sea.api.dto.request.ClientRequestDTO;
 import com.sea.api.dto.request.ClientUpdateDTO;
 import com.sea.api.dto.response.ClientResponseDTO;
+import com.sea.api.dto.response.PageResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -36,7 +35,7 @@ public interface ClientControllerDocs {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
         }   
     )
-    public ResponseEntity<List<ClientResponseDTO>> findAllClients(Integer page, Integer size, String direction);
+    public ResponseEntity<PageResponseDTO<ClientResponseDTO>> findAllClients(Integer page, Integer size, String direction);
 
     @Operation(summary = "Busca um cliente por ID", description = "Busca um cliente específico pelo seu ID",
         responses = {
@@ -68,7 +67,7 @@ public interface ClientControllerDocs {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
         }   
     )
-    public ResponseEntity<List<ClientResponseDTO>> findClientsByUf(
+    public ResponseEntity<PageResponseDTO<ClientResponseDTO>> findClientsByUf(
         String uf, Integer page, Integer size
     );
 
