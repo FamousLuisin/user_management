@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.sea.api.exception.CepNotFoundException;
 import com.sea.api.exception.ExceptionResponse;
 import com.sea.api.exception.NotFoundAddressException;
 import com.sea.api.exception.NotFoundClientException;
@@ -153,6 +154,19 @@ public class ExceptionResponseHandler {
             HttpStatus.UNAUTHORIZED.name(), 
             ex.getMessage(), 
             HttpStatus.UNAUTHORIZED.value(), 
+            request.getDescription(false),
+            LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @ExceptionHandler(CepNotFoundException.class)
+    public final ResponseEntity<ExceptionResponse> cepNotFoundExceptionHandler(Exception ex, WebRequest request){   
+        ExceptionResponse response = new ExceptionResponse(
+            HttpStatus.NOT_FOUND.name(), 
+            ex.getMessage(), 
+            HttpStatus.NOT_FOUND.value(), 
             request.getDescription(false),
             LocalDateTime.now()
         );
