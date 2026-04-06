@@ -2,9 +2,9 @@ spring:
     application:
         name: api
     datasource:
-        url: jdbc:postgresql://localhost:5432/database
-        username: admin
-        password: admin
+        url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/database}
+        username: ${DATABASE_USERNAME:admin}
+        password: ${DATABASE_PASSWORD:admin}
     jpa:
         hibernate:
             ddl-auto: none
@@ -14,4 +14,8 @@ logging:
   level:
     root: WARN
 jwt:
-    secret: mysecretkey
+    secret: ${JWT_SECRET:mysecretkey}
+    issuer: ${JWT_ISSUER:http://localhost:8080}
+    expiration: ${JWT_EXPIRATION:3600000}
+cors:
+    allowedOrigins: ${ALLOWED_ORIGINS:http://localhost:3000,http://localhost:8080}

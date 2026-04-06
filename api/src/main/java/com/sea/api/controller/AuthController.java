@@ -3,6 +3,7 @@ package com.sea.api.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sea.api.controller.docs.AuthControllerDocs;
 import com.sea.api.dto.request.LoginUserDTO;
 import com.sea.api.dto.request.RegisterUserDTO;
 import com.sea.api.dto.response.JwtResponseDTO;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/auth")
-public class AuthController {
+public class AuthController implements AuthControllerDocs {
 
     @Autowired
     private AuthService authService;
