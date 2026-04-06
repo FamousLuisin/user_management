@@ -35,6 +35,7 @@ import com.sea.api.dto.request.PhoneRequestDTO;
 import com.sea.api.dto.response.AddressResponseDTO;
 import com.sea.api.dto.response.ClientResponseDTO;
 import com.sea.api.dto.response.EmailResponseDTO;
+import com.sea.api.dto.response.PageResponseDTO;
 import com.sea.api.dto.response.PhoneResponseDTO;
 import com.sea.api.mapper.Mapper;
 import com.sea.api.mock.MockAddress;
@@ -107,17 +108,17 @@ public class ClientServiceTest {
         });
         when(mapper.parseObject(clientMock, ClientResponseDTO.class)).thenReturn(clientResponseMock);
 
-        clientService.createClient(clientRequetsMock);
+        ClientResponseDTO result = clientService.createClient(clientRequetsMock);
 
-        assertNotNull(clientResponseMock);
-        assertNotNull(clientResponseMock.getId());
-        assertNotNull(clientResponseMock.getEmails());
-        assertNotNull(clientResponseMock.getPhones());
-        assertNotNull(clientResponseMock.getAddress());
+        assertNotNull(result);
+        assertNotNull(result.getId());
+        assertNotNull(result.getEmails());
+        assertNotNull(result.getPhones());
+        assertNotNull(result.getAddress());
 
-        assertEquals(1L, clientResponseMock.getId());
-        assertEquals("71968770046", clientResponseMock.getCpf());
-        assertEquals("John Doe", clientResponseMock.getName());
+        assertEquals(1L, result.getId());
+        assertEquals("71968770046", result.getCpf());
+        assertEquals("John Doe", result.getName());
 
         verifyNoMoreInteractions(mapper);
         verify(clientRepository, times(1)).save(any(Client.class));
@@ -148,13 +149,13 @@ public class ClientServiceTest {
         when(mapper.parseObject(any(Client.class), eq(ClientResponseDTO.class)))
             .thenAnswer(a -> clientResponseMock.get(index.getAndIncrement()));
 
-        clientService.findAllClients(pageable);
+        PageResponseDTO<ClientResponseDTO> pageResponse = clientService.findAllClients(pageable);
 
-        assertNotNull(clientResponseMock);
-        assertEquals(2, clientResponseMock.size());
-        assertEquals("John Doe", clientResponseMock.get(0).getName());
-        assertEquals(0L, clientResponseMock.get(0).getPhones().get(0).getId());
-        assertEquals("email0@email.com", clientResponseMock.get(0).getEmails().get(0).getEmail());
+        assertNotNull(pageResponse);
+        assertEquals(2, pageResponse.getContent().size());
+        assertEquals("John Doe", pageResponse.getContent().get(0).getName());
+        assertEquals(0L, pageResponse.getContent().get(0).getPhones().get(0).getId());
+        assertEquals("email0@email.com", pageResponse.getContent().get(0).getEmails().get(0).getEmail());
     }
 
     @Test
@@ -170,14 +171,14 @@ public class ClientServiceTest {
         when(clientRepository.findById(1L)).thenReturn(Optional.of(clientMock));
         when(mapper.parseObject(clientMock, ClientResponseDTO.class)).thenReturn(clientResponseMock);
 
-        clientService.findClientById(1L);
+        ClientResponseDTO result = clientService.findClientById(1L);
 
-        assertNotNull(clientResponseMock);
-        assertEquals("John Doe", clientResponseMock.getName());
-        assertEquals("71968770046", clientResponseMock.getCpf());
-        assertEquals(1L, clientResponseMock.getPhones().get(0).getId());
-        assertEquals("email@email.com", clientResponseMock.getEmails().get(0).getEmail());
-        assertEquals("Praça da Sé", clientResponseMock.getAddress().getLogradouro());
+        assertNotNull(result);
+        assertEquals("John Doe", result.getName());
+        assertEquals("71968770046", result.getCpf());
+        assertEquals(1L, result.getPhones().get(0).getId());
+        assertEquals("email@email.com", result.getEmails().get(0).getEmail());
+        assertEquals("Praça da Sé", result.getAddress().getLogradouro());
     }
 
     @Test
@@ -189,10 +190,10 @@ public class ClientServiceTest {
         when(clientRepository.findById(1L)).thenReturn(Optional.of(clientMock));
         when(mapper.parseObject(clientMock, ClientResponseDTO.class)).thenReturn(clientResponseMock);
 
-        clientService.updateClientById(1L, clientUpdateMock);
+        ClientResponseDTO result = clientService.updateClientById(1L, clientUpdateMock);
 
-        assertNotNull(clientResponseMock);
-        assertEquals("John Doe", clientResponseMock.getName());
-        assertEquals("71968770046", clientResponseMock.getCpf());
+        assertNotNull(result);
+        assertEquals("John Doe", result.getName());
+        assertEquals("71968770046", result.getCpf());
     }
 }

@@ -12,6 +12,7 @@ import com.sea.api.dto.request.AddressRequestDTO;
 import com.sea.api.dto.request.ClientRequestDTO;
 import com.sea.api.dto.request.ClientUpdateDTO;
 import com.sea.api.dto.response.ClientResponseDTO;
+import com.sea.api.dto.response.PageResponseDTO;
 import com.sea.api.exception.NotFoundClientException;
 import com.sea.api.mapper.Mapper;
 import com.sea.api.model.Address;
@@ -56,12 +57,12 @@ public class ClientService {
         return mapper.parseObject(client, ClientResponseDTO.class);
     }
 
-    public List<ClientResponseDTO> findAllClients(Pageable pageable){
+    public PageResponseDTO<ClientResponseDTO> findAllClients(Pageable pageable){
         Page<Client> clients = clientRepository.findAll(pageable);
 
         Page<ClientResponseDTO> clientsDTO = clients.map(c -> mapper.parseObject(c, ClientResponseDTO.class));
         
-        return clientsDTO.toList();
+        return new PageResponseDTO<>(clientsDTO);
     }
 
     public ClientResponseDTO findClientById(Long id){
@@ -98,11 +99,11 @@ public class ClientService {
         return mapper.parseObject(client, ClientResponseDTO.class);
     }
 
-    public List<ClientResponseDTO> findClientsByUf(String uf, Pageable pageable) {
-        List<Client> clients = clientRepository.findByAddressUf(uf, pageable);
+    public PageResponseDTO<ClientResponseDTO> findClientsByUf(String uf, Pageable pageable) {
+        Page<Client> clients = clientRepository.findByAddressUf(uf, pageable);
 
-        return clients.stream()
-            .map(c -> mapper.parseObject(c, ClientResponseDTO.class))
-            .collect(Collectors.toList());
+        Page<ClientResponseDTO> clientsDTO = clients.map(c -> mapper.parseObject(c, ClientResponseDTO.class));
+
+        return new PageResponseDTO<>(clientsDTO);
     }
 }

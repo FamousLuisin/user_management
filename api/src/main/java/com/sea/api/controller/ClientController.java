@@ -1,7 +1,5 @@
 package com.sea.api.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +18,7 @@ import com.sea.api.controller.docs.ClientControllerDocs;
 import com.sea.api.dto.request.ClientRequestDTO;
 import com.sea.api.dto.request.ClientUpdateDTO;
 import com.sea.api.dto.response.ClientResponseDTO;
+import com.sea.api.dto.response.PageResponseDTO;
 import com.sea.api.service.ClientService;
 import com.sea.api.validation.cpf.Cpf;
 
@@ -45,7 +44,7 @@ public class ClientController implements ClientControllerDocs {
     }
     
     @GetMapping
-    public ResponseEntity<List<ClientResponseDTO>> findAllClients(
+    public ResponseEntity<PageResponseDTO<ClientResponseDTO>> findAllClients(
         @RequestParam(name = "page", defaultValue = "0") Integer page,
         @RequestParam(name = "size", defaultValue = "10") Integer size,
         @RequestParam(name = "direction", defaultValue = "ASC") String direction
@@ -54,7 +53,7 @@ public class ClientController implements ClientControllerDocs {
         Direction sort = direction.equals("DESC") ? Direction.DESC : Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort, "name"));
         
-        List<ClientResponseDTO> response = clientService.findAllClients(pageable);
+        PageResponseDTO<ClientResponseDTO> response = clientService.findAllClients(pageable);
 
         return ResponseEntity.ok(response);
     }
@@ -74,7 +73,7 @@ public class ClientController implements ClientControllerDocs {
     }
 
     @GetMapping(path = "uf/{uf}")
-    public ResponseEntity<List<ClientResponseDTO>> findClientsByUf(
+    public ResponseEntity<PageResponseDTO<ClientResponseDTO>> findClientsByUf(
         @PathVariable(name = "uf") String uf,
         @RequestParam(name = "page", defaultValue = "0") Integer page,
         @RequestParam(name = "size", defaultValue = "10") Integer size
@@ -82,7 +81,7 @@ public class ClientController implements ClientControllerDocs {
         Direction sort = Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort, "name"));
 
-        List<ClientResponseDTO> response = clientService.findClientsByUf(uf, pageable);
+        PageResponseDTO<ClientResponseDTO> response = clientService.findClientsByUf(uf, pageable);
         
         return ResponseEntity.ok(response);
     }
