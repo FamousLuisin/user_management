@@ -2,6 +2,8 @@ package com.sea.api.exception.handler;
 
 import java.time.LocalDateTime;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -25,8 +27,12 @@ import com.sea.api.exception.NotFoundPhoneException;
 @RestController
 public class ExceptionResponseHandler {
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<ExceptionResponse> globalExceptionHandler(Exception ex, WebRequest request){
+        logger.error("Erro interno [{}]: {}", request.getDescription(false), ex.getMessage(), ex);
+
         ExceptionResponse response = new ExceptionResponse(
             HttpStatus.INTERNAL_SERVER_ERROR.name(), 
             ex.getMessage(), 
@@ -40,6 +46,8 @@ public class ExceptionResponseHandler {
 
     @ExceptionHandler(ResponseStatusException.class)
     public final ResponseEntity<ExceptionResponse> responseStatusExceptionHandler(ResponseStatusException ex, WebRequest request){
+        logger.warn("ResponseStatusException [{}]: {}", request.getDescription(false), ex.getReason());
+
         ExceptionResponse response = new ExceptionResponse(
             ex.getStatus().name(), 
             ex.getReason(), 
@@ -58,6 +66,8 @@ public class ExceptionResponseHandler {
             .map(e -> e.getDefaultMessage())
             .findFirst()
             .orElse("Validation error");
+
+        logger.warn("Erro de validação [{}]: {}", request.getDescription(false), message);
         
         ExceptionResponse response = new ExceptionResponse(
             HttpStatus.BAD_REQUEST.name(), 
@@ -70,8 +80,18 @@ public class ExceptionResponseHandler {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
-    @ExceptionHandler(NotFoundClientException.class)
-    public final ResponseEntity<ExceptionResponse> notFoundClientExceptionHandler(Exception ex, WebRequest request){   
+    @ExceptionHandler({
+        NotFoundClientException.class,
+        NotFoundAddressException.class,
+        NotFoundPhoneException.class,
+        NotFoundEmailException.class,
+        UsernameNotFoundException.class,
+        CepNotFoundException.class
+    })
+    public final ResponseEntity<ExceptionResponse> notFoundHandler(Exception ex, WebRequest request){
+
+        logger.warn("Recurso não encontrado [{}]: {}", request.getDescription(false), ex.getMessage());
+
         ExceptionResponse response = new ExceptionResponse(
             HttpStatus.NOT_FOUND.name(), 
             ex.getMessage(), 
@@ -80,50 +100,13 @@ public class ExceptionResponseHandler {
             LocalDateTime.now()
         );
 
-        return ResponseEntity.status(response.getStatus()).body(response);
-    }
-
-    @ExceptionHandler(NotFoundAddressException.class)
-    public final ResponseEntity<ExceptionResponse> notFoundAddressExceptionHandler(Exception ex, WebRequest request){   
-        ExceptionResponse response = new ExceptionResponse(
-            HttpStatus.NOT_FOUND.name(), 
-            ex.getMessage(), 
-            HttpStatus.NOT_FOUND.value(), 
-            request.getDescription(false),
-            LocalDateTime.now()
-        );
-
-        return ResponseEntity.status(response.getStatus()).body(response);
-    }
-
-    @ExceptionHandler(NotFoundPhoneException.class)
-    public final ResponseEntity<ExceptionResponse> notFoundPhoneExceptionHandler(Exception ex, WebRequest request){   
-        ExceptionResponse response = new ExceptionResponse(
-            HttpStatus.NOT_FOUND.name(), 
-            ex.getMessage(), 
-            HttpStatus.NOT_FOUND.value(), 
-            request.getDescription(false),
-            LocalDateTime.now()
-        );
-
-        return ResponseEntity.status(response.getStatus()).body(response);
-    }
-
-    @ExceptionHandler(NotFoundEmailException.class)
-    public final ResponseEntity<ExceptionResponse> notFoundEmailExceptionHandler(Exception ex, WebRequest request){   
-        ExceptionResponse response = new ExceptionResponse(
-            HttpStatus.NOT_FOUND.name(), 
-            ex.getMessage(), 
-            HttpStatus.NOT_FOUND.value(), 
-            request.getDescription(false),
-            LocalDateTime.now()
-        );
-
-        return ResponseEntity.status(response.getStatus()).body(response);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public final ResponseEntity<ExceptionResponse> httpMessageNotReadableExceptionHandler(Exception ex, WebRequest request){   
+    public final ResponseEntity<ExceptionResponse> httpMessageNotReadableExceptionHandler(Exception ex, WebRequest request){  
+        logger.warn("Erro de parsing JSON [{}]: {}", request.getDescription(false), ex.getMessage());
+        
         ExceptionResponse response = new ExceptionResponse(
             HttpStatus.BAD_REQUEST.name(), 
             "Dados inválidos", 
@@ -135,38 +118,14 @@ public class ExceptionResponseHandler {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public final ResponseEntity<ExceptionResponse> usernameNotFoundExceptionHandler(Exception ex, WebRequest request){   
-        ExceptionResponse response = new ExceptionResponse(
-            HttpStatus.NOT_FOUND.name(), 
-            ex.getMessage(), 
-            HttpStatus.NOT_FOUND.value(), 
-            request.getDescription(false),
-            LocalDateTime.now()
-        );
-
-        return ResponseEntity.status(response.getStatus()).body(response);
-    }
-
     @ExceptionHandler(AuthenticationException.class)
     public final ResponseEntity<ExceptionResponse> authenticationExceptionHandler(Exception ex, WebRequest request){   
+        logger.warn("Falha de autenticação [{}]: {}", request.getDescription(false), ex.getMessage());
+
         ExceptionResponse response = new ExceptionResponse(
             HttpStatus.UNAUTHORIZED.name(), 
             ex.getMessage(), 
             HttpStatus.UNAUTHORIZED.value(), 
-            request.getDescription(false),
-            LocalDateTime.now()
-        );
-
-        return ResponseEntity.status(response.getStatus()).body(response);
-    }
-
-    @ExceptionHandler(CepNotFoundException.class)
-    public final ResponseEntity<ExceptionResponse> cepNotFoundExceptionHandler(Exception ex, WebRequest request){   
-        ExceptionResponse response = new ExceptionResponse(
-            HttpStatus.NOT_FOUND.name(), 
-            ex.getMessage(), 
-            HttpStatus.NOT_FOUND.value(), 
             request.getDescription(false),
             LocalDateTime.now()
         );
