@@ -1,0 +1,19 @@
+server:
+    port: 8888
+spring:
+    application:
+        name: api
+    jpa:
+        hibernate:
+            ddl-auto: none
+        open-in-view: false
+        show-sql: false
+logging:
+  level:
+    root: WARN
+jwt:
+    secret: ${JWT_SECRET:mysecretkey}
+    issuer: ${JWT_ISSUER:http://localhost:8080}
+    expiration: ${JWT_EXPIRATION:3600000}
+cors:
+    allowedOrigins: ${ALLOWED_ORIGINS:http://localhost:3000,http://localhost:8080}

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,7 @@ import com.sea.api.dto.request.ClientRequestDTO;
 import com.sea.api.dto.request.ClientUpdateDTO;
 import com.sea.api.dto.response.ClientResponseDTO;
 import com.sea.api.service.ClientService;
+import com.sea.api.validation.cpf.Cpf;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,6 +62,27 @@ public class ClientController implements ClientControllerDocs {
     @GetMapping(path = "/{id}")
     public ResponseEntity<ClientResponseDTO> findClientById(@PathVariable(name = "id") Long id){
         ClientResponseDTO response = clientService.findClientById(id);
+        
+        return ResponseEntity.ok(response);
+    }
+
+    @Validated
+    @GetMapping(path = "/cpf/{cpf}")
+    public ResponseEntity<ClientResponseDTO> findClientByCpf(@PathVariable(name = "cpf") @Cpf String cpf){
+        ClientResponseDTO response = clientService.findClientByCpf(cpf);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(path = "uf/{uf}")
+    public ResponseEntity<List<ClientResponseDTO>> findClientsByUf(
+        @PathVariable(name = "uf") String uf,
+        @RequestParam(name = "page", defaultValue = "0") Integer page,
+        @RequestParam(name = "size", defaultValue = "10") Integer size
+    ){
+        Direction sort = Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort, "name"));
+
+        List<ClientResponseDTO> response = clientService.findClientsByUf(uf, pageable);
         
         return ResponseEntity.ok(response);
     }

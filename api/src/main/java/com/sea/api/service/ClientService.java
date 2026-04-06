@@ -87,4 +87,22 @@ public class ClientService {
 
         clientRepository.delete(client);
     }
+
+    public ClientResponseDTO findClientByCpf(String cpf) {
+        Client client = clientRepository.findByCpf(NormalizeFields.normalize(cpf));
+        
+        if(client == null){
+            throw new NotFoundClientException(cpf);
+        }
+
+        return mapper.parseObject(client, ClientResponseDTO.class);
+    }
+
+    public List<ClientResponseDTO> findClientsByUf(String uf, Pageable pageable) {
+        List<Client> clients = clientRepository.findByAddressUf(uf, pageable);
+
+        return clients.stream()
+            .map(c -> mapper.parseObject(c, ClientResponseDTO.class))
+            .collect(Collectors.toList());
+    }
 }
