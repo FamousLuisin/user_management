@@ -23,7 +23,7 @@ Aplicação fullstack para gerenciamento de clientes, composta por:
 | Tipo           | Username | Senha      | Permissão                      |
 |----------------|----------|------------|--------------------------------|
 | Admin          | admin    | admin      | Acesso total                   |
-| Usuário comum  | user     | common     | Apenas visualização dos dados  |
+| Usuário comum  | common   | common     | Apenas visualização dos dados  |
 
 ---
 
