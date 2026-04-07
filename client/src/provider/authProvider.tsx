@@ -1,7 +1,9 @@
 import { useState, useEffect, type ReactNode } from "react";
 import { jwtDecode } from "jwt-decode";
 import { AuthContext } from "@/context/authContex";
-import type { AuthType, AuthUser } from "@/types/authType";
+import type { AuthType, AuthUser, LoginRequest } from "@/types/authType";
+import { fetchAPI } from "@/utils/fetchApi";
+import { API_URL } from "@/config/api";
 
 type Props = {
   children: ReactNode;
@@ -9,7 +11,7 @@ type Props = {
 
 type JwtPayload = {
   sub: string;
-  role: "ADMIN" | "COMMON";
+  roles: ("ADMIN" | "COMMON")[];
 };
 
 export function AuthProvider({ children }: Props) {
@@ -23,7 +25,7 @@ export function AuthProvider({ children }: Props) {
 
     const user: AuthUser = {
       username: decoded.sub,
-      role: decoded.role,
+      roles: decoded.roles,
     };
 
     setToken(token);
@@ -32,25 +34,18 @@ export function AuthProvider({ children }: Props) {
 
   async function login(username: string, password: string): Promise<void> {
     try {
-      const response = await fetch("http://localhost:8080/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
+      const login: LoginRequest = { username, password };
+      console.log(API_URL)
+      const data = await fetchAPI<LoginRequest, { token: string }>(`${API_URL}/auth/login`, "POST", {
+        body: login,
       });
 
-      if (!response.ok) {
-        throw new Error("Invalid credentials");
-      }
+      if (!data) throw Error("erro ao obter token")
 
-      const data = await response.json();
       const token = data.token;
-
       setAuthFromToken(token);
       localStorage.setItem("token", token);
     } catch (error) {
-      console.error("Login error:", error);
       throw error;
     }
   }

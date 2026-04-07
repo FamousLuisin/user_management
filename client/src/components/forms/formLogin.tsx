@@ -8,6 +8,8 @@ import { useAuth } from "@/context/authContex";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { InfoIcon } from "lucide-react";
 
 export function FormLogin() {
   const form = useForm<z.infer<typeof loginSchema>>({ 
@@ -26,7 +28,7 @@ export function FormLogin() {
     try {
       await login(data.username, data.password);
     } catch (error) {
-      setErr("Invalid credentials");
+      setErr("credenciais invalidas");
     }
   }
 
@@ -58,14 +60,20 @@ export function FormLogin() {
             )}
           />
         </FieldGroup>
+
+        {err && (
+          <Alert variant="destructive">
+            <InfoIcon />
+            <AlertTitle>Warning</AlertTitle>
+            <AlertDescription>
+              {err}
+            </AlertDescription>
+          </Alert>
+        )}
+
         <Button className="cursor-pointer" type="submit">Login</Button>
       </form>
-      {err && (
-        <div className="flex items-center gap-2 text-sm text-destructive">
-          <span>⚠</span>
-          <p>{err}</p>
-        </div>
-      )}
+
     </div>
   );
 }
