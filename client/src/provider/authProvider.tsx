@@ -18,7 +18,7 @@ export function AuthProvider({ children }: Props) {
 
   const isAuthenticated = !!token;
 
-  function login(token: string) {
+  function setAuthFromToken(token: string) {
     const decoded = jwtDecode<JwtPayload>(token);
 
     const user: AuthUser = {
@@ -28,8 +28,31 @@ export function AuthProvider({ children }: Props) {
 
     setToken(token);
     setUser(user);
+  }
 
-    localStorage.setItem("token", token);
+  async function login(username: string, password: string): Promise<void> {
+    try {
+      const response = await fetch("http://localhost:8080/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Invalid credentials");
+      }
+
+      const data = await response.json();
+      const token = data.token;
+
+      setAuthFromToken(token);
+      localStorage.setItem("token", token);
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
+    }
   }
 
   function logout() {
@@ -42,7 +65,7 @@ export function AuthProvider({ children }: Props) {
     const storedToken = localStorage.getItem("token");
 
     if (storedToken) {
-      login(storedToken);
+      setAuthFromToken(storedToken);
     }
   }, []);
 

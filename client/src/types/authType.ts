@@ -9,6 +9,6 @@ export type AuthType = {
     token: string | null;
     user: AuthUser | null;
     isAuthenticated: boolean;
-    login: (token: string) => void;
+    login: (username: string, password: string) => Promise<void>;
     logout: () => void;
 }

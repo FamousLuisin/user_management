@@ -1,6 +1,7 @@
 import logo from "@/assets/logo.png";
 import { Button } from "./ui/button";
 import { useAuth } from "@/context/authContex";
+import DialogFormLogin from "./dialogFormLogin";
 
 function Header() {
   const { isAuthenticated, logout } = useAuth();
@@ -13,13 +14,11 @@ function Header() {
       </div>
       <div>
         {isAuthenticated ? (
-          <Button  onClick={logout}>
+          <Button className="cursor-pointer" onClick={logout}>
             Logout
           </Button>
         ) : (
-          <Button className="cursor-pointer">
-            Login
-          </Button>
+          <DialogFormLogin />
         )}
       </div>
     </header>
