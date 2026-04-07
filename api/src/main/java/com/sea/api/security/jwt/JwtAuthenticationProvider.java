@@ -37,6 +37,7 @@ public class JwtAuthenticationProvider {
                     .withClaim("roles", user.getAuthorities()
                         .stream()
                         .map(auth -> auth.getAuthority())
+                        .map(role -> role.replace("ROLE_", ""))
                         .collect(Collectors.toList()))
                     .sign(algorithm);
         } catch (JWTCreationException exception){
