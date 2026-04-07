@@ -6,14 +6,16 @@ export default function DialogFormLogin() {
   return (
       <Dialog>
           <DialogTrigger asChild>
-            <Button className="cursor-pointer">
+            <Button
+              className="cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95"
+            >
               Login
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-sm">
             <div className="flex flex-col items-start gap-4 w-full">
               <DialogHeader className="border-b w-full pb-2">
-                <DialogTitle>Edit profile</DialogTitle>
+                <DialogTitle>Login</DialogTitle>
               </DialogHeader>
             
               <div className="w-full">

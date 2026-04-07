@@ -3,7 +3,7 @@ import Header from "./header";
 
 function Layout() {
   return (
-    <div className="min-h-screen flex flex-col items-center bg-background">
+    <div className="min-h-screen flex flex-col items-center bg-background gap-3">
         <Header />
         <Outlet />
     </div>

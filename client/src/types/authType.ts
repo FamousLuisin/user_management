@@ -2,7 +2,7 @@ type Role = "ADMIN" | "COMMON";
 
 export type AuthUser = {
   username: string;
-  role: Role;
+  roles: Role[];
 };
 
 export type AuthType = {
@@ -11,4 +11,9 @@ export type AuthType = {
     isAuthenticated: boolean;
     login: (username: string, password: string) => Promise<void>;
     logout: () => void;
+}
+
+export type LoginRequest = {
+    username: string;
+    password: string;
 }

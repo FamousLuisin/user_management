@@ -5,6 +5,7 @@ import App from './components/app'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 import Layout from './components/layout'
 import { AuthProvider } from './provider/authProvider'
+import { Toaster } from 'sonner'
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider>
+      <Toaster position='top-center'/>
       <RouterProvider router={router} />
     </AuthProvider>
   </StrictMode>,

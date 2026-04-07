@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -126,6 +127,21 @@ public class ExceptionResponseHandler {
             HttpStatus.UNAUTHORIZED.name(), 
             ex.getMessage(), 
             HttpStatus.UNAUTHORIZED.value(), 
+            request.getDescription(false),
+            LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public final ResponseEntity<ExceptionResponse> dataIntegrityViolationExceptionHandler(DataIntegrityViolationException ex, WebRequest request){
+        logger.warn("Violação de integridade dos dados [{}]: {}", request.getDescription(false), ex.getMessage());
+
+        ExceptionResponse response = new ExceptionResponse(
+            HttpStatus.CONFLICT.name(), 
+            "Violação de integridade dos dados: " + ex.getMostSpecificCause().getMessage().split("\n")[0], 
+            HttpStatus.CONFLICT.value(), 
             request.getDescription(false),
             LocalDateTime.now()
         );
