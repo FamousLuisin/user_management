@@ -68,7 +68,13 @@ chmod +x run.sh
 ./run.sh
 ```
 
-Se tudo der certo a api vai esta disponivel em http://localhost:8080
+Se tudo der certo a api vai esta disponivel em http://localhost:8080 e o swagger em http://localhost:8080/swagger-ui/index.html
+
+E caso deseje pode fazer os teste da aplicação usando o seguinte comando
+
+```bash
+./mvnw test
+```
 
 ## ⚛️ Rodando o client
 Agora navegue até a pasta do client e execute os comandos, e certifique de criar o .env seguindo o .env.example
