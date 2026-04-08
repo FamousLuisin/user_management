@@ -29,6 +29,8 @@ public class SecurityConfig {
 
     public static final String[] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
         "/auth/login",
+        "/auth/refresh",
+        "/auth/logout",
         "/swagger-ui/**",
         "/swagger-ui.html",
         "/v3/api-docs/**",

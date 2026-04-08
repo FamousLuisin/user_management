@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -142,6 +144,36 @@ public class ExceptionResponseHandler {
             HttpStatus.CONFLICT.name(), 
             "Violação de integridade dos dados: " + ex.getMostSpecificCause().getMessage().split("\n")[0], 
             HttpStatus.CONFLICT.value(), 
+            request.getDescription(false),
+            LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @ExceptionHandler(MissingRequestCookieException.class)
+    public final ResponseEntity<ExceptionResponse> missingRequestCookieExceptionHandler(MissingRequestCookieException ex, WebRequest request){
+        logger.warn("Cookie esta em falta [{}]: {}", request.getDescription(false), ex.getCookieName());
+
+        ExceptionResponse response = new ExceptionResponse(
+            HttpStatus.BAD_REQUEST.name(), 
+            String.format("Cookie esta em falta: %s", ex.getCookieName()), 
+            HttpStatus.BAD_REQUEST.value(), 
+            request.getDescription(false),
+            LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public final ResponseEntity<ExceptionResponse> httpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException ex, WebRequest request){
+        logger.warn("Metodo invalido para esse path [{}]: {}", request.getDescription(false), ex.getMethod());
+
+        ExceptionResponse response = new ExceptionResponse(
+            HttpStatus.BAD_REQUEST.name(), 
+            String.format("Método inválido: %s", ex.getMethod()), 
+            HttpStatus.BAD_REQUEST.value(), 
             request.getDescription(false),
             LocalDateTime.now()
         );
