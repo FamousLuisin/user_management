@@ -15,7 +15,7 @@ Aplicação fullstack para gerenciamento de clientes, composta por:
   - **COMMON** → apenas visualização
 - Cadastro, listagem e gerenciamento de clientes
 - Scroll infinito na listagem
-- Integração completa entre frontend e API
+- Integração parcial entre frontend e API
 
 
 ## 🔐 Usuários de Teste
@@ -23,7 +23,7 @@ Aplicação fullstack para gerenciamento de clientes, composta por:
 | Tipo           | Username | Senha      | Permissão                      |
 |----------------|----------|------------|--------------------------------|
 | Admin          | admin    | admin      | Acesso total                   |
-| Usuário comum  | common   | common     | Apenas visualização dos dados  |
+| Comum          | common   | common     | Apenas visualização dos dados  |
 
 ---
 
