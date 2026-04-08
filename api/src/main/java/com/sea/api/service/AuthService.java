@@ -14,9 +14,11 @@ import com.sea.api.dto.request.RegisterUserDTO;
 import com.sea.api.dto.request.LoginUserDTO;
 import com.sea.api.dto.response.JwtResponseDTO;
 import com.sea.api.mapper.Mapper;
+import com.sea.api.model.RefreshToken;
 import com.sea.api.model.Role;
 import com.sea.api.model.User;
 import com.sea.api.model.Role.RoleType;
+import com.sea.api.repository.RefreshTokenRepository;
 import com.sea.api.repository.RoleRepository;
 import com.sea.api.repository.UserRepository;
 import com.sea.api.security.jwt.JwtAuthenticationProvider;
@@ -35,6 +37,9 @@ public class AuthService {
     private RoleRepository roleRepository;
 
     @Autowired
+    private RefreshTokenRepository refreshTokenRepository;
+
+    @Autowired
     private JwtAuthenticationProvider jwtProvider;
 
     @Autowired
@@ -50,8 +55,16 @@ public class AuthService {
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        
+        User user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        return new JwtResponseDTO(jwtProvider.generateToken(userDetails));
+        String accessToken = jwtProvider.generateToken(userDetails);
+        String refreshToken = jwtProvider.generateRefreshToken(userDetails.getUsername());
+        
+        RefreshToken refreshTokenEntity = new RefreshToken(user, refreshToken, jwtProvider.getRefreshTokenExpirationInstant());
+        refreshTokenRepository.save(refreshTokenEntity);
+
+        return new JwtResponseDTO(accessToken, refreshToken);
     }
 
     public JwtResponseDTO register(RegisterUserDTO request) {
@@ -75,7 +88,38 @@ public class AuthService {
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        
+        String accessToken = jwtProvider.generateToken(userDetails);
+        String refreshToken = jwtProvider.generateRefreshToken(userDetails.getUsername());
+        
+        RefreshToken refreshTokenEntity = new RefreshToken(user, refreshToken, jwtProvider.getRefreshTokenExpirationInstant());
+        refreshTokenRepository.save(refreshTokenEntity);
 
-        return new JwtResponseDTO(jwtProvider.generateToken(userDetails));
+        return new JwtResponseDTO(accessToken, refreshToken);
+    }
+
+    public JwtResponseDTO refreshToken(String refreshTokenString) {
+        
+        if (!jwtProvider.validateRefreshToken(refreshTokenString)) {
+            throw new RuntimeException("Refresh token inválido ou expirado.");
+        }
+        
+        refreshTokenRepository.findByToken(refreshTokenString)
+            .orElseThrow(() -> new RuntimeException("Refresh token não encontrado."));
+        
+        String username = jwtProvider.getSubjectFromRefreshToken(refreshTokenString);
+        User user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+        
+        CustomUserDetails userDetails = new CustomUserDetails(user);
+        String newAccessToken = jwtProvider.generateToken(userDetails);
+        
+        return new JwtResponseDTO(newAccessToken, refreshTokenString);
+    }
+
+    public void logout(String token) {
+        RefreshToken refreshToken = refreshTokenRepository.findByToken(token).orElseThrow(() -> new RuntimeException("Refresh token não encontrado."));
+
+        refreshTokenRepository.delete(refreshToken);
     }
 }

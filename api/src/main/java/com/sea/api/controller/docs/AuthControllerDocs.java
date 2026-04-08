@@ -31,4 +31,20 @@ public interface AuthControllerDocs {
         }
     )
     public ResponseEntity<JwtResponseDTO> register(RegisterUserDTO request);
+
+    @Operation(summary = "Refresh token do usaurio", description = "Endpoint para fazer refresh token.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Refresh token feito com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida")
+        }
+    )
+    public ResponseEntity<JwtResponseDTO> refresh(String token);
+
+    @Operation(summary = "Logout do usuario", description = "Endpoint para fazer logout do usuário.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Logout feito com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida")
+        }
+    )
+    public ResponseEntity<JwtResponseDTO> logout(String token);
 }

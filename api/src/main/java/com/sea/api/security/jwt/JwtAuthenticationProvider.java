@@ -26,6 +26,9 @@ public class JwtAuthenticationProvider {
     @Value("${jwt.expiration:360000000000000}")
     private long expiration;
 
+    @Value("${jwt.refresh-expiration:604800000}")
+    private long refreshExpiration;
+
     public String generateToken(CustomUserDetails user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
@@ -45,6 +48,21 @@ public class JwtAuthenticationProvider {
         }
     }
 
+    public String generateRefreshToken(String username) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            return JWT.create()
+                    .withIssuer(issuer)
+                    .withIssuedAt(creationDate())
+                    .withExpiresAt(getRefreshTokenExpirationInstant())
+                    .withSubject(username)
+                    .withClaim("type", "refresh")
+                    .sign(algorithm);
+        } catch (JWTCreationException exception){
+            throw new JWTCreationException("Erro ao gerar refresh token.", exception);
+        }
+    }
+
     public String getSubjectFromToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
@@ -56,6 +74,36 @@ public class JwtAuthenticationProvider {
         } catch (JWTVerificationException exception){
             throw new JWTVerificationException("Token inválido ou expirado.");
         }
+    }
+
+    public String getSubjectFromRefreshToken(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            return JWT.require(algorithm)
+                    .withIssuer(issuer)
+                    .build()
+                    .verify(token)
+                    .getSubject();
+        } catch (JWTVerificationException exception){
+            throw new JWTVerificationException("Refresh token inválido ou expirado.");
+        }
+    }
+
+    public boolean validateRefreshToken(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            JWT.require(algorithm)
+                    .withIssuer(issuer)
+                    .build()
+                    .verify(token);
+            return true;
+        } catch (JWTVerificationException exception){
+            return false;
+        }
+    }
+
+    public Instant getRefreshTokenExpirationInstant() {
+        return ZonedDateTime.now(ZoneId.of("America/Recife")).toInstant().plusMillis(refreshExpiration);
     }
 
     private Instant creationDate() {
